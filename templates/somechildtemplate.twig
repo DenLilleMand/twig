@@ -1,0 +1,20 @@
+{% extends "inheritance.twig" %}
+{# The extends tag should be the first in the template  #}
+
+{% block title %}Index{% endblock %}
+{% block head %}
+	{{ parent() }}
+	<style type="text/css">
+		.important { color: #336699 }
+	</style>
+{% endblock %}
+{% block content %}
+	<h1>Index</h1>
+	<p class="important">
+		Welcome to my awesome homepage.
+	</p>
+{% endblock %}
+{% block footer %}
+	<div>some footer stuff added by the child</div>
+	{{ parent() }}
+{% endblock %}

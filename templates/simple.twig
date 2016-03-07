@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        <h1>{{header}}</h1>
+    	{# this is the way to do comments #}
+
+	{# The following two ways is how we can access properties of variables #}
+    	{{ foo.bar }}
+	{{ foo['bar']}}
+
+	{# If we have a key with a special character in it, like the minus sign, 
+		we have to use the attribute method instead:#}
+	{{ attribute(data, 'data-foo')}}
+
+	{# Something important is that the subscript aka foo['bar'] syntax
+		is only available if foo is a array, it doesn't work on objects, 
+		besides that its possible to see a extensive list of what exactly 
+		the dot syntax and subscript syntax tries 
+		to do in order to provide useful output: http://twig.sensiolabs.org/doc/templates.html  -> search for implementation.
+		#}
+
+	{# Global variables, the following variables are allways available in 
+	templates: 
+		_self: references the current template
+		_context: references the current context
+		_chaControl structures appear inside {% ... %} blocks.rset: references the current charset
+	#}
+
+	{# We can declare variables inside of blocks: #}
+	{% set foo = 'foo' %}
+	{% set foo = [1,2] %}
+	{% set foo = {'foo':'bar'} %}
+
+	{# Twig allso has filters, the idea is that we give it a variable, 
+		and then from left to right it runs the given filter methods, 
+		and each filter method gives its result to the next filter: #}
+	{% set test_filter_variable = "<h2>herpderp</h2>" %}
+	{{ test_filter_variable|striptags|title }}
+
+	{% set test_filter_array = ['a','b','c','d','e'] %}
+	{{ test_filter_array|join(', ')|upper }}
+
+	{# Can allso apply a filter on a section of code: #}
+	{% filter upper %}
+		This text is upper cased by a filter
+	{% endfilter %}
+
+	{# Built in filters: http://twig.sensiolabs.org/doc/filters/index.html  #}
+
+
+	{# Functions in twig, it has a bunch of predefined once: http://twig.sensiolabs.org/doc/functions/index.html #}
+
+	{# the range methoControl structures appear inside {% ... %} blocks.d: #}
+	{% for i in range(0,3) %}
+		{{ i }}
+	{% endfor %}
+
+
+	{# Named arguments(looks like it starts with 1, doesn't go beyond 10, 
+	and takes a step of 2 each time.): #}
+	{% for i in range(low=1, high=10, step=2) %}
+		{{ i }},
+	{% endfor %}
+
+	{# Named arguments can make it more explicit what we're trying to do e.g. #}
+	{% set data = "herpderpyderp" %}
+
+	{{ data|convert_encoding('UTF-8', 'iso-2022-jp') }}
+
+	{# Versus: #}
+
+	{{ data|convert_encoding(from='iso-2022-jp', to='UTF-8')}}
+
+
+
+	{# Control structures, like if, elseif, else, for-loops etc. #}
+	{% set users = [{'name':'matti'}, {'name':'kasper'}] %}
+	<ul>
+	{% for user in users %}
+		<li>
+		{{user.name}}
+		</li>
+	{% endfor %}
+	</ul>
+
+	{% if users|length > 0 %}
+		user list is above 0 
+	{% endif %}
+
+	{# in these two previous control structures, we would call 
+		the if and for  keywords 'tags', can find other tags 
+		at http://twig.sensiolabs.org/doc/tags/index.html #}
+
+
+	{# Include another template #}
+	{% include 'another.twig'%}
+	{# Whenever we include another template, it gets 
+		passed the context of the outer scope, 
+		it allso gets passed the variables, 
+		so if we want to do a for-loop and
+		use another template as item, the item 
+		in this case is accessible inside of the item.twig,
+		but so is all of the other variables in this context, 
+		so just because item is the cloest variable doesn't 
+		make it any more special:#}
+	{% for item in users %}
+	    {% include 'item.twig' %}
+	{% endfor %}
+
+
+	{# Macro, which is basically a function #}
+	{% import "form_macro.twig" as form %}
+	<p>{{ form.input('username', 'herpderp')}}</p>
+
+
+
+
+
+
+
+
+
+    </body>
+</html>
